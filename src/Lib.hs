@@ -15,17 +15,17 @@ data Nat =
     deriving (Show)
 
 -- projection
-proj :: Int -> [Nat] -> Nat
-proj n args = args !! n
+proj :: Int -> [Nat] -> [Nat]
+proj n args = [args !! n]
 
 -- composition
-compose :: ([Nat] -> Nat) -> [[Nat] -> Nat] -> [Nat] -> Nat
-compose f gs args = f [g args | g <- gs]
+compose :: ([Nat] -> [Nat]) -> [[Nat] -> [Nat]] -> [Nat] -> [Nat]
+compose f gs args = f $ concat [g args | g <- gs]
 
 -- primitive recursive
-recurse :: ([Nat] -> Nat) -> ([Nat] -> Nat) -> [Nat] -> Nat
+recurse :: ([Nat] -> [Nat]) -> ([Nat] -> [Nat]) -> [Nat] -> [Nat]
 recurse f g (Z : args) = f args
-recurse f g (S n : args) = g (n : h : args)
+recurse f g (S n : args) = g $ n : (h ++ args)
     where
         h = recurse f g (n : args)
 
